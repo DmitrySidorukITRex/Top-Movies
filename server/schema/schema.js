@@ -22,6 +22,8 @@ const MovieType = new GraphQLObjectType({
     rate: { type: new GraphQLNonNull(GraphQLFloat) },
     year: { type: new GraphQLNonNull(GraphQLInt) },
     imgSrc: { type: new GraphQLNonNull(GraphQLString) },
+    trailerId: { type: GraphQLString },
+    description: { type: GraphQLString },
     director: {
       type: DirectorType,
       resolve({ directorId }, args) {
@@ -38,6 +40,14 @@ const DirectorType = new GraphQLObjectType({
     name: { type: new GraphQLNonNull(GraphQLString) },
     age: { type: new GraphQLNonNull(GraphQLInt) },
     imgSrc: { type: new GraphQLNonNull(GraphQLString) },
+    born: { type: GraphQLString },
+    bornPlace: { type: GraphQLString },
+    career: { type: GraphQLString },
+    genres: { type: GraphQLString },
+    height: { type: GraphQLFloat },
+    imdbSrc: { type: GraphQLString },
+    moviesCount: { type: GraphQLInt },
+    moviesYears: { type: GraphQLString },
     movies: {
       type: new GraphQLList(MovieType),
       resolve({ id }, args) {
@@ -56,12 +66,43 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         age: { type: new GraphQLNonNull(GraphQLInt) },
         imgSrc: { type: new GraphQLNonNull(GraphQLString) },
+        born: { type: GraphQLString },
+        bornPlace: { type: GraphQLString },
+        career: { type: GraphQLString },
+        genres: { type: GraphQLString },
+        height: { type: GraphQLFloat },
+        imdbSrc: { type: GraphQLString },
+        moviesCount: { type: GraphQLInt },
+        moviesYears: { type: GraphQLString },
       },
-      resolve(parent, { name, age, imgSrc }) {
+      resolve(
+        parent,
+        {
+          name,
+          age,
+          imgSrc,
+          born,
+          bornPlace,
+          career,
+          genres,
+          height,
+          imdbSrc,
+          moviesCount,
+          moviesYears,
+        }
+      ) {
         const director = new Directors({
           name,
           age,
           imgSrc,
+          born,
+          bornPlace,
+          career,
+          genres,
+          height,
+          imdbSrc,
+          moviesCount,
+          moviesYears,
         });
         return director.save();
       },
@@ -74,15 +115,22 @@ const Mutation = new GraphQLObjectType({
         rate: { type: new GraphQLNonNull(GraphQLFloat) },
         year: { type: new GraphQLNonNull(GraphQLInt) },
         imgSrc: { type: new GraphQLNonNull(GraphQLString) },
+        trailerId: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
         directorId: { type: GraphQLString },
       },
-      resolve(parent, { name, genre, rate, year, imgSrc, directorId }) {
+      resolve(
+        parent,
+        { name, genre, rate, year, imgSrc, trailerId, description, directorId }
+      ) {
         const movie = new Movies({
           name,
           genre,
           rate,
           year,
           imgSrc,
+          trailerId,
+          description,
           directorId,
         });
         return movie.save();

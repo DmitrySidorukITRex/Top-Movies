@@ -5,27 +5,25 @@ import * as Styled from './styled';
 
 interface MovieCard {
   movie: Movie;
+  onCardClick: (movie: Movie) => void;
 }
 
-const MovieCard: React.FC<MovieCard> = ({ movie }) => {
+const MovieCard: React.FC<MovieCard> = ({ movie, onCardClick }) => {
+  const { name, genre, year, rate, imgSrc } = movie;
+
   return (
     <Styled.Card>
-      <Styled.Poster>
-        <Image
-          unoptimized
-          src={movie.imgSrc}
-          width={180}
-          height={250}
-          alt="movie image"
-        />
+      <Styled.Poster onClick={() => onCardClick(movie)}>
+        <Image src={imgSrc} width={180} height={250} alt="movie image" />
+        <Styled.Details>Details</Styled.Details>
       </Styled.Poster>
-      <Styled.Title>{movie.name}</Styled.Title>
+      <Styled.Title>{name}</Styled.Title>
       <Styled.Subtitle>
-        {movie.year}, {movie.genre}
+        {year}, {genre}
       </Styled.Subtitle>
       <Styled.Subtitle>
         IMDb Rating
-        <Styled.Rate>{movie.rate}</Styled.Rate>
+        <Styled.Rate>{rate}</Styled.Rate>
       </Styled.Subtitle>
     </Styled.Card>
   );

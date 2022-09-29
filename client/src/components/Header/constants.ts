@@ -1,7 +1,7 @@
 export const Routes = [
   {
     id: 1,
-    url: '/',
+    url: '/movies',
     title: 'Movies',
   },
   {

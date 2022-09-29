@@ -7,5 +7,7 @@ export interface Movie {
   rate: number;
   year: number;
   imgSrc: string;
+  trailerId: string;
+  description: string;
   director: Director;
 }

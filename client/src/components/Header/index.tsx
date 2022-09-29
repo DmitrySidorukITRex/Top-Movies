@@ -13,7 +13,7 @@ const Header = () => {
         {Routes.map((route) => {
           return (
             <Link key={route.id} href={route.url}>
-              <Styled.NavLink $isActive={router.pathname === route.url}>
+              <Styled.NavLink $isActive={router.pathname.includes(route.url)}>
                 {route.title}
               </Styled.NavLink>
             </Link>

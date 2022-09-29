@@ -16,3 +16,26 @@ export const getMovies = () =>
       }
     `,
   });
+
+export const getMovie = (id: string) =>
+  client.query({
+    query: gql`
+      query movieQuery($id: ID) {
+        movie(id: $id) {
+          id
+          name
+          genre
+          rate
+          year
+          imgSrc
+          trailerId
+          description
+          director {
+            id
+            name
+          }
+        }
+      }
+    `,
+    variables: { id },
+  });
