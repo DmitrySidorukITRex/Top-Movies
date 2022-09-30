@@ -1,9 +1,10 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { ParsedUrlQuery } from 'querystring';
 import DirectorDetailsLayout from '../../containers/DirectorDetailsLayout';
 import { Director } from '../../interfaces/director';
 import { Movie } from '../../interfaces/movie';
-import { getDirector } from '../../services/directors';
+import { getDirector, getDirectors } from '../../services/directors';
 
 interface DirectorDetailsProps {
   director: Director;
@@ -20,6 +21,8 @@ const DirectorDetails: NextPage<DirectorDetailsProps> = ({ director }) => {
     <DirectorDetailsLayout director={director} onMovieClick={onMovieClick} />
   );
 };
+
+// HERE IS SSR
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id } = context.params!;
@@ -40,5 +43,39 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
+
+// HERE IS SSG
+
+// export const getStaticPaths = async () => {
+//   const { data } = await getDirectors();
+
+//   const paths = data.directors.map((director: Director) => ({
+//     params: { id: director.id },
+//   }));
+
+//   return {
+//     paths,
+//     fallback: false,
+//   };
+// };
+
+// export const getStaticProps: GetStaticProps = async (context) => {
+//   try {
+//     const { id } = context.params as ParsedUrlQuery;
+//     const { data } = await getDirector(id as string);
+
+//     return {
+//       props: {
+//         director: data.director,
+//       },
+//     };
+//   } catch (err) {
+//     return {
+//       props: {
+//         director: {},
+//       },
+//     };
+//   }
+// };
 
 export default DirectorDetails;

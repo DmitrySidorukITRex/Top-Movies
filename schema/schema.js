@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const Movies = require('../models/movie');
 const Directors = require('../models/director');
 const Users = require('../models/user');
-const keys = require('../config/keys');
 
 const {
   GraphQLObjectType,
@@ -226,7 +225,7 @@ const Mutation = new GraphQLObjectType({
                   email: candidate.email,
                   id: candidate._id,
                 },
-                keys.jwt,
+                process.env.JWT,
                 { expiresIn: 3600 }
               );
 

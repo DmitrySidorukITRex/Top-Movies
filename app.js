@@ -2,13 +2,15 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema/schema');
 const mongoose = require('mongoose');
+const path = require('path');
 const cors = require('cors');
-const keys = require('./config/keys');
+require('dotenv').config();
 
 const app = express();
-const PORT = 3005;
+const PORT = process.env.PORT || 3005;
+const mongo_uri = process.env.MONGO_URI;
 
-mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
+mongoose.connect(mongo_uri, { useNewUrlParser: true });
 
 app.use(cors());
 

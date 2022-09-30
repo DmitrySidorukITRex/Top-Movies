@@ -1,4 +1,5 @@
-import { GetServerSideProps, NextPage } from 'next';
+import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 import MovieDetailsLayout from '../../containers/MovieDetailsLayout';
 import { Movie } from '../../interfaces/movie';
 import { getMovie, getMovies } from '../../services/movies';
@@ -42,8 +43,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 //     params: { id: movie.id },
 //   }));
 
-//   console.log('paths', paths);
-
 //   return {
 //     paths,
 //     fallback: false,
@@ -54,11 +53,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 //   try {
 //     const { id } = context.params as ParsedUrlQuery;
 //     const { data } = await getMovie(id as string);
-//     console.log('data', data);
 
 //     return {
 //       props: {
-//         movies: data.movie,
+//         movie: data.movie,
 //       },
 //     };
 //   } catch (err) {

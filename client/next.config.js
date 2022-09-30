@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  env: {
+    serverURI: 'http://localhost:3005/graphql',
+  },
   images: {
     domains: [
       's4.vcdn.biz',
