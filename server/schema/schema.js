@@ -1,6 +1,10 @@
 const graphql = require('graphql');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const Movies = require('../models/movie');
 const Directors = require('../models/director');
+const Users = require('../models/user');
+const keys = require('../config/keys');
 
 const {
   GraphQLObjectType,
@@ -11,6 +15,7 @@ const {
   GraphQLList,
   GraphQLNonNull,
   GraphQLFloat,
+  GraphQLBoolean,
 } = graphql;
 
 const MovieType = new GraphQLObjectType({
@@ -54,6 +59,16 @@ const DirectorType = new GraphQLObjectType({
         return Movies.find({ directorId: id });
       },
     },
+  }),
+});
+
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  fields: () => ({
+    email: { type: GraphQLString },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+    isAdmin: { type: GraphQLBoolean },
+    id: { type: GraphQLID },
   }),
 });
 
@@ -187,6 +202,77 @@ const Mutation = new GraphQLObjectType({
           { $set: { name, genre, rate, year, imgSrc, directorId } },
           { new: true }
         );
+      },
+    },
+    login: {
+      type: UserType,
+      args: {
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, { email, password }) {
+        const login = async () => {
+          const candidate = await Users.findOne({ email });
+
+          if (candidate) {
+            const passwordResult = bcrypt.compareSync(
+              password,
+              candidate.password
+            );
+
+            if (passwordResult) {
+              const token = jwt.sign(
+                {
+                  email: candidate.email,
+                  id: candidate._id,
+                },
+                keys.jwt,
+                { expiresIn: 3600 }
+              );
+
+              return {
+                token: `Bearer ${token}`,
+                email: candidate.email,
+                isAdmin: candidate.isAdmin,
+                id: candidate._id,
+              };
+            } else {
+              throw new Error('Invalid email or password. Try again.');
+            }
+          } else {
+            throw new Error('User with this email not found.');
+          }
+        };
+        const data = login();
+        return data;
+      },
+    },
+    signUp: {
+      type: UserType,
+      args: {
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      resolve(parent, { email, password }) {
+        const signUp = async () => {
+          const candidate = await Users.findOne({ email: email });
+
+          if (candidate) {
+            throw new Error('This email is already taken. Try another one.');
+          } else {
+            const salt = bcrypt.genSaltSync(10);
+            const user = new Users({
+              email: email,
+              password: bcrypt.hashSync(password, salt),
+              isAdmin: true,
+            });
+
+            return user.save();
+          }
+        };
+
+        const data = signUp();
+        return data;
       },
     },
   },

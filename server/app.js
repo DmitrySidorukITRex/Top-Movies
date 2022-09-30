@@ -3,14 +3,12 @@ const { graphqlHTTP } = require('express-graphql');
 const schema = require('./schema/schema');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const keys = require('./config/keys');
 
 const app = express();
 const PORT = 3005;
 
-mongoose.connect(
-  'mongodb+srv://Lostintime:Lostintime2415@cluster0.deszira.mongodb.net/Project',
-  { useNewUrlParser: true }
-);
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true });
 
 app.use(cors());
 

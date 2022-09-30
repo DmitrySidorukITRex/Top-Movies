@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Layout = styled.div`
   min-height: calc(100vh - 87px);
   padding: 30px 150px;
-  background-color: rgb(31, 31, 31);
+  background-color: #1f1f1f;
   color: #fff;
 `;
 

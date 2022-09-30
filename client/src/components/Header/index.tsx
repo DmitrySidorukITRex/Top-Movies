@@ -8,7 +8,9 @@ const Header = () => {
 
   return (
     <Styled.Header>
-      <Styled.Logo>TOP MOVIES</Styled.Logo>
+      <Styled.Logo>
+        <Link href="/">TOP MOVIES</Link>
+      </Styled.Logo>
       <Styled.Navigation>
         {Routes.map((route) => {
           return (
