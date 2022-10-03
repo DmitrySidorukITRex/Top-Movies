@@ -18,7 +18,7 @@ const Movies: NextPage<MoviesPageProps> = ({ movies }) => {
 
   return (
     <PageLayout>
-      {movies.map((movie) => {
+      {movies?.map((movie) => {
         return (
           <MovieCard key={movie.id} movie={movie} onCardClick={onMovieClick} />
         );

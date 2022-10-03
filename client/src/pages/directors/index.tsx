@@ -18,15 +18,19 @@ const Directors: NextPage<DirectorsProps> = ({ directors }) => {
 
   return (
     <PageLayout>
-      {directors.map((director) => {
-        return (
-          <DirectorCard
-            key={director.id}
-            director={director}
-            onCardClick={onDirectorClick}
-          />
-        );
-      })}
+      {directors?.length ? (
+        directors.map((director) => {
+          return (
+            <DirectorCard
+              key={director.id}
+              director={director}
+              onCardClick={onDirectorClick}
+            />
+          );
+        })
+      ) : (
+        <h1>No directors</h1>
+      )}
     </PageLayout>
   );
 };

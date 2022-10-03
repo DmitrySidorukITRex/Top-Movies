@@ -22,6 +22,14 @@ app.use(
   })
 );
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, './client/out')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './client/out/movies.html'));
+  });
+}
+
 app.listen(PORT, (err) => {
   err ? console.log(err) : console.log('Server started!');
 });
