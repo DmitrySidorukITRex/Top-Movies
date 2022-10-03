@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   env: {
-    serverURI: 'http://localhost:3005/graphql',
+    serverURI: 'https://topofmovies.herokuapp.com/graphql',
   },
   images: {
     domains: [
@@ -17,6 +17,7 @@ const nextConfig = {
       'kinopoisk-ru.clstorage.net',
     ],
     minimumCacheTTL: 300,
+    unoptimized: true,
   },
   async redirects() {
     return [

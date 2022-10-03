@@ -24,44 +24,10 @@ const DirectorDetails: NextPage<DirectorDetailsProps> = ({ director }) => {
 
 // HERE IS SSR
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params!;
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const { id } = context.params!;
 
-  try {
-    const { data } = await getDirector(id as string);
-
-    return {
-      props: {
-        director: data.director,
-      },
-    };
-  } catch (err) {
-    return {
-      props: {
-        director: {},
-      },
-    };
-  }
-};
-
-// HERE IS SSG
-
-// export const getStaticPaths = async () => {
-//   const { data } = await getDirectors();
-
-//   const paths = data.directors.map((director: Director) => ({
-//     params: { id: director.id },
-//   }));
-
-//   return {
-//     paths,
-//     fallback: false,
-//   };
-// };
-
-// export const getStaticProps: GetStaticProps = async (context) => {
 //   try {
-//     const { id } = context.params as ParsedUrlQuery;
 //     const { data } = await getDirector(id as string);
 
 //     return {
@@ -77,5 +43,39 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 //     };
 //   }
 // };
+
+// HERE IS SSG
+
+export const getStaticPaths = async () => {
+  const { data } = await getDirectors();
+
+  const paths = data.directors.map((director: Director) => ({
+    params: { id: director.id },
+  }));
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
+  try {
+    const { id } = context.params as ParsedUrlQuery;
+    const { data } = await getDirector(id as string);
+
+    return {
+      props: {
+        director: data.director,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        director: {},
+      },
+    };
+  }
+};
 
 export default DirectorDetails;
