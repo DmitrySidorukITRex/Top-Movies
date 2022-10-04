@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  trailingSlash: true,
   env: {
     serverURI: 'https://topofmovies.herokuapp.com/graphql',
   },

@@ -35,6 +35,7 @@ export const getStaticProps = async () => {
       props: {
         movies: data.movies || [],
       },
+      revalidate: 60,
     };
   } catch (err) {
     return {

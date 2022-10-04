@@ -68,6 +68,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
       props: {
         director: data.director,
       },
+      revalidate: 300,
     };
   } catch (err) {
     return {
