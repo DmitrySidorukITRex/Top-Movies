@@ -1,53 +1,24 @@
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
+import { GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import { initializeApollo } from '../../../apollo-client';
 import DirectorDetailsLayout from '../../containers/DirectorDetailsLayout';
 import { Director } from '../../interfaces/director';
-import { Movie } from '../../interfaces/movie';
-import { getDirector, getDirectors } from '../../services/directors';
+import { GET_DIRECTOR, GET_DIRECTORS } from '../../services/directors';
 
 interface DirectorDetailsProps {
   director: Director;
 }
 
 const DirectorDetails: NextPage<DirectorDetailsProps> = ({ director }) => {
-  const router = useRouter();
-
-  const onMovieClick = (movie: Movie) => {
-    router.push(`/movies/${movie.id}`);
-  };
-
-  return (
-    <DirectorDetailsLayout director={director} onMovieClick={onMovieClick} />
-  );
+  return <DirectorDetailsLayout />;
 };
 
-// HERE IS SSR
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { id } = context.params!;
-
-//   try {
-//     const { data } = await getDirector(id as string);
-
-//     return {
-//       props: {
-//         director: data.director,
-//       },
-//     };
-//   } catch (err) {
-//     return {
-//       props: {
-//         director: {},
-//       },
-//     };
-//   }
-// };
-
-// HERE IS SSG
-
 export const getStaticPaths = async () => {
-  const { data } = await getDirectors();
+  const apolloClient = initializeApollo();
+
+  const { data } = await apolloClient.query({
+    query: GET_DIRECTORS,
+  });
 
   const paths = data.directors.map((director: Director) => ({
     params: { id: director.id },
@@ -60,23 +31,20 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  try {
-    const { id } = context.params as ParsedUrlQuery;
-    const { data } = await getDirector(id as string);
+  const apolloClient = initializeApollo();
 
-    return {
-      props: {
-        director: data.director,
-      },
-      revalidate: 300,
-    };
-  } catch (err) {
-    return {
-      props: {
-        director: {},
-      },
-    };
-  }
+  const { id } = context.params as ParsedUrlQuery;
+
+  await apolloClient.query({
+    query: GET_DIRECTOR,
+    variables: { id },
+  });
+
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+    },
+  };
 };
 
 export default DirectorDetails;

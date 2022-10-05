@@ -1,43 +1,24 @@
 import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import { initializeApollo } from '../../../apollo-client';
 import MovieDetailsLayout from '../../containers/MovieDetailsLayout';
 import { Movie } from '../../interfaces/movie';
-import { getMovie, getMovies } from '../../services/movies';
+import { GET_MOVIE, GET_MOVIES } from '../../services/movies';
 
 interface MovieDetailsPage {
   movie: Movie;
 }
 
 const MovieDetails: NextPage<MovieDetailsPage> = ({ movie }) => {
-  return <MovieDetailsLayout movie={movie} />;
+  return <MovieDetailsLayout />;
 };
 
-// HERE IS SSR
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { id } = context.params!;
-
-//   try {
-//     const { data } = await getMovie(id as string);
-
-//     return {
-//       props: {
-//         movie: data.movie,
-//       },
-//     };
-//   } catch (err) {
-//     return {
-//       props: {
-//         movie: {},
-//       },
-//     };
-//   }
-// };
-
-// HERE IS SSG
-
 export const getStaticPaths = async () => {
-  const { data } = await getMovies();
+  const apolloClient = initializeApollo();
+
+  const { data } = await apolloClient.query({
+    query: GET_MOVIES,
+  });
 
   const paths = data.movies.map((movie: Movie) => ({
     params: { id: movie.id },
@@ -50,23 +31,20 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  try {
-    const { id } = context.params as ParsedUrlQuery;
-    const { data } = await getMovie(id as string);
+  const apolloClient = initializeApollo();
 
-    return {
-      props: {
-        movie: data.movie,
-      },
-      revalidate: 300,
-    };
-  } catch (err) {
-    return {
-      props: {
-        movie: {},
-      },
-    };
-  }
+  const { id } = context.params as ParsedUrlQuery;
+
+  await apolloClient.query({
+    query: GET_MOVIE,
+    variables: { id },
+  });
+
+  return {
+    props: {
+      initialApolloState: apolloClient.cache.extract(),
+    },
+  };
 };
 
 export default MovieDetails;
