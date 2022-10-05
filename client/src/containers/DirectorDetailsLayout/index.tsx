@@ -1,23 +1,26 @@
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
+import { useQuery } from '@apollo/client';
 import MovieCard from '../../components/MovieCard';
+import { GET_DIRECTOR } from '../../services/directors';
 import { Director } from '../../interfaces/director';
 import { Movie } from '../../interfaces/movie';
 import { getFieldsInfo } from './helper';
 import * as Styled from './styled';
 
-interface DirectorDetailsLayoutProps {
-  director: Director;
-  onMovieClick: (movie: Movie) => void;
-}
+const DirectorDetailsLayout = () => {
+  const router = useRouter();
+  const { data } = useQuery(GET_DIRECTOR, {
+    variables: { id: router.query.id },
+  });
+  const { name, imgSrc, imdbSrc, movies } = data.director as Director;
 
-const DirectorDetailsLayout: React.FC<DirectorDetailsLayoutProps> = ({
-  director,
-  onMovieClick,
-}) => {
-  const { name, imgSrc, imdbSrc, movies } = director;
+  const info = useMemo(() => getFieldsInfo(data.director), [data.director]);
 
-  const info = useMemo(() => getFieldsInfo(director), [director]);
+  const onMovieClick = (movie: Movie) => {
+    router.push(`/movies/${movie.id}`);
+  };
 
   return (
     <Styled.Layout>
