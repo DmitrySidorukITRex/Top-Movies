@@ -1,16 +1,29 @@
 import { GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import { useRouter } from 'next/router';
+import { useQuery } from '@apollo/client';
 import { initializeApollo } from '../../../apollo-client';
 import DirectorDetailsLayout from '../../containers/DirectorDetailsLayout';
 import { Director } from '../../interfaces/director';
 import { GET_DIRECTOR, GET_DIRECTORS } from '../../services/directors';
+import { Movie } from '../../interfaces/movie';
 
-interface DirectorDetailsProps {
-  director: Director;
-}
+const DirectorDetails: NextPage = () => {
+  const router = useRouter();
+  const { data } = useQuery(GET_DIRECTOR, {
+    variables: { id: router.query.id },
+  });
 
-const DirectorDetails: NextPage<DirectorDetailsProps> = ({ director }) => {
-  return <DirectorDetailsLayout />;
+  const onMovieClick = (movie: Movie) => {
+    router.push(`/movies/${movie.id}`);
+  };
+
+  return (
+    <DirectorDetailsLayout
+      director={data.director}
+      onMovieClick={onMovieClick}
+    />
+  );
 };
 
 export const getStaticPaths = async () => {

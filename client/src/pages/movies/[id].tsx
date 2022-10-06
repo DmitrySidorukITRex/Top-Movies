@@ -1,16 +1,17 @@
-import { GetServerSideProps, GetStaticProps, NextPage } from 'next';
+import { GetStaticProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { useQuery } from '@apollo/client';
 import { ParsedUrlQuery } from 'querystring';
 import { initializeApollo } from '../../../apollo-client';
 import MovieDetailsLayout from '../../containers/MovieDetailsLayout';
 import { Movie } from '../../interfaces/movie';
 import { GET_MOVIE, GET_MOVIES } from '../../services/movies';
 
-interface MovieDetailsPage {
-  movie: Movie;
-}
+const MovieDetails: NextPage = () => {
+  const router = useRouter();
+  const { data } = useQuery(GET_MOVIE, { variables: { id: router.query.id } });
 
-const MovieDetails: NextPage<MovieDetailsPage> = ({ movie }) => {
-  return <MovieDetailsLayout />;
+  return <MovieDetailsLayout movie={data.movie} />;
 };
 
 export const getStaticPaths = async () => {
