@@ -9,7 +9,9 @@ import { GET_MOVIE, GET_MOVIES } from '../../services/movies';
 
 const MovieDetails: NextPage = () => {
   const router = useRouter();
-  const { data } = useQuery(GET_MOVIE, { variables: { id: router.query.id } });
+  const { data } = useQuery(GET_MOVIE, {
+    variables: { id: router.query.id },
+  });
 
   return <MovieDetailsLayout movie={data.movie} />;
 };

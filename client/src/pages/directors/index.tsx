@@ -12,7 +12,9 @@ interface DirectorsProps {
 }
 
 const Directors: NextPage<DirectorsProps> = () => {
-  const { data } = useQuery(GET_DIRECTORS);
+  const { data } = useQuery(GET_DIRECTORS, {
+    fetchPolicy: 'cache-and-network',
+  });
   const router = useRouter();
   const directors: Director[] = data.directors;
 

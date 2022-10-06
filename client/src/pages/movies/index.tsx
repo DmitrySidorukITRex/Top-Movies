@@ -12,7 +12,7 @@ interface MoviesPageProps {
 }
 
 const Movies: NextPage<MoviesPageProps> = () => {
-  const { data } = useQuery(GET_MOVIES);
+  const { data } = useQuery(GET_MOVIES, { fetchPolicy: 'cache-and-network' });
   const router = useRouter();
   const movies: Movie[] = data.movies;
 

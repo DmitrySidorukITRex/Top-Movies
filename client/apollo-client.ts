@@ -9,11 +9,6 @@ function createApolloClient(): ApolloClient<NormalizedCacheObject> {
     cache: new InMemoryCache(),
     uri: process.env.serverURI,
     ssrMode: typeof window === 'undefined',
-    defaultOptions: {
-      watchQuery: {
-        nextFetchPolicy: 'cache-and-network',
-      },
-    },
   });
 }
 
