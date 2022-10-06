@@ -1,17 +1,15 @@
-import { useQuery } from '@apollo/client';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 import YouTube from 'react-youtube';
 import { Movie } from '../../interfaces/movie';
-import { GET_MOVIE } from '../../services/movies';
 import * as Styled from './styled';
 
-const MovieDetailsLayout = () => {
-  const router = useRouter();
-  const { data } = useQuery(GET_MOVIE, { variables: { id: router.query.id } });
-  const { name, year, rate, trailerId, genre, description, director } =
-    data.movie as Movie;
+interface MovieDetailsLayoutProps {
+  movie: Movie;
+}
+
+const MovieDetailsLayout: React.FC<MovieDetailsLayoutProps> = ({ movie }) => {
+  const { name, year, rate, trailerId, genre, description, director } = movie;
 
   const opts = {
     height: '480',
