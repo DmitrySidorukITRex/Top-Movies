@@ -1,12 +1,24 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { offsetLimitPagination } from '@apollo/client/utilities';
+
 import { NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { useMemo } from 'react';
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        movies: offsetLimitPagination(),
+      },
+    },
+  },
+});
+
 function createApolloClient(): ApolloClient<NormalizedCacheObject> {
   return new ApolloClient({
-    cache: new InMemoryCache(),
+    cache,
     uri: process.env.serverURI,
     ssrMode: typeof window === 'undefined',
   });
@@ -20,6 +32,7 @@ export function initializeApollo(
 
   if (initialState) {
     const existingCache = _apolloClient.extract();
+    // console.log('cache', { ...existingCache, ...initialState });
 
     _apolloClient.cache.restore({ ...existingCache, ...initialState });
   }

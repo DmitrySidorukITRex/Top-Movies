@@ -296,8 +296,16 @@ const Query = new GraphQLObjectType({
     },
     movies: {
       type: new GraphQLList(MovieType),
-      resolve(parent, args) {
-        return Movies.find({});
+      args: { offset: { type: GraphQLInt }, limit: { type: GraphQLInt } },
+      resolve(parent, { offset, limit }) {
+        if (!limit) return Movies.find({});
+
+        const getMovies = async () => {
+          const movies = await Movies.find({});
+          return movies.splice(offset, limit);
+        };
+        const data = getMovies();
+        return data;
       },
     },
     directors: {

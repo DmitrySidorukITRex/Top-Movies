@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_MOVIES = gql`
-  query GetMovies {
-    movies {
+  query GetMovies($offset: Int, $limit: Int) {
+    movies(offset: $offset, limit: $limit) {
       id
       name
       genre
