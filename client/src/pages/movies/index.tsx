@@ -69,6 +69,8 @@ export const getStaticProps = async () => {
     variables: { offset: 0, limit: 15 },
   });
 
+  console.log('cache', apolloClient.cache.extract());
+
   return {
     props: {
       initialApolloState: apolloClient.cache.extract(),
