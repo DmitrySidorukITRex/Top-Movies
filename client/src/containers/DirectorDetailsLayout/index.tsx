@@ -23,13 +23,7 @@ const DirectorDetailsLayout: React.FC<DirectorDetailsLayoutProps> = ({
   return (
     <Styled.Layout>
       <Styled.Director>
-        <Image
-          unoptimized
-          width={280}
-          height={420}
-          src={imgSrc}
-          alt="director image"
-        />
+        <Image width={280} height={420} src={imgSrc} alt="director image" />
         <Styled.Info>
           <Styled.Title>{name}</Styled.Title>
           {info.map((item) => {

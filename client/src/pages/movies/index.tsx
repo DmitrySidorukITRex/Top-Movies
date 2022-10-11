@@ -13,12 +13,13 @@ interface MoviesPageProps {
 }
 
 const Movies: NextPage<MoviesPageProps> = () => {
-  const { data, fetchMore } = useQuery(GET_MOVIES, {
+  const { loading, data, fetchMore } = useQuery(GET_MOVIES, {
+    fetchPolicy: 'cache-and-network',
     variables: { offset: 0, limit: 15 },
   });
   const router = useRouter();
   const listInnerRef = useRef<HTMLDivElement>(null);
-  const movies: Movie[] = data.movies;
+  const movies: Movie[] = data?.movies;
 
   useEffect(() => {
     function watchScroll() {
@@ -44,6 +45,10 @@ const Movies: NextPage<MoviesPageProps> = () => {
     }
   };
 
+  if (loading && !data) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <div ref={listInnerRef}>
       <PageLayout>
@@ -61,21 +66,21 @@ const Movies: NextPage<MoviesPageProps> = () => {
   );
 };
 
-export const getStaticProps = async () => {
-  const apolloClient = initializeApollo();
+// export const getStaticProps = async () => {
+//   const apolloClient = initializeApollo();
 
-  await apolloClient.query({
-    query: GET_MOVIES,
-    variables: { offset: 0, limit: 15 },
-  });
+//   await apolloClient.query({
+//     query: GET_MOVIES,
+//     variables: { offset: 0, limit: 15 },
+//   });
 
-  console.log('cache', apolloClient.cache.extract());
+//   console.log('cache', apolloClient.cache.extract());
 
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
-  };
-};
+//   return {
+//     props: {
+//       initialApolloState: apolloClient.cache.extract(),
+//     },
+//   };
+// };
 
 export default Movies;

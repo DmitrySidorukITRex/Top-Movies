@@ -11,6 +11,18 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         movies: offsetLimitPagination(),
+        movie: {
+          read(_, { args, toReference }) {
+            console.log(
+              'here',
+              toReference({ __typename: 'Movie', id: args!.id })
+            );
+            return toReference({
+              __typename: 'Movie',
+              id: args!.id,
+            });
+          },
+        },
       },
     },
   },

@@ -12,13 +12,19 @@ interface DirectorsProps {
 }
 
 const Directors: NextPage<DirectorsProps> = () => {
-  const { data } = useQuery(GET_DIRECTORS);
+  const { loading, data } = useQuery(GET_DIRECTORS, {
+    fetchPolicy: 'cache-and-network',
+  });
   const router = useRouter();
-  const directors: Director[] = data.directors;
+  const directors: Director[] = data?.directors;
 
   const onDirectorClick = (director: Director) => {
     router.push(`/directors/${director.id}`);
   };
+
+  if (loading && !data) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <PageLayout>
@@ -35,18 +41,18 @@ const Directors: NextPage<DirectorsProps> = () => {
   );
 };
 
-export const getStaticProps = async () => {
-  const apolloClient = initializeApollo();
+// export const getStaticProps = async () => {
+//   const apolloClient = initializeApollo();
 
-  await apolloClient.query({
-    query: GET_DIRECTORS,
-  });
+//   await apolloClient.query({
+//     query: GET_DIRECTORS,
+//   });
 
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
-  };
-};
+//   return {
+//     props: {
+//       initialApolloState: apolloClient.cache.extract(),
+//     },
+//   };
+// };
 
 export default Directors;

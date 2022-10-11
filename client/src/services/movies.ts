@@ -9,6 +9,12 @@ export const GET_MOVIES = gql`
       rate
       year
       imgSrc
+      trailerId
+      description
+      director {
+        id
+        name
+      }
     }
   }
 `;
@@ -21,7 +27,6 @@ export const GET_MOVIE = gql`
       genre
       rate
       year
-      imgSrc
       trailerId
       description
       director {

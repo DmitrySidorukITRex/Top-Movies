@@ -9,45 +9,50 @@ import { GET_MOVIE, GET_MOVIES } from '../../services/movies';
 
 const MovieDetails: NextPage = () => {
   const router = useRouter();
-  const { data } = useQuery(GET_MOVIE, {
+  const { loading, data } = useQuery(GET_MOVIE, {
+    fetchPolicy: 'cache-and-network',
     variables: { id: router.query.id },
   });
+
+  if (loading && !data) {
+    return <h1>Loading...</h1>;
+  }
 
   return <MovieDetailsLayout movie={data.movie} />;
 };
 
-export const getStaticPaths = async () => {
-  const apolloClient = initializeApollo();
+// export const getStaticPaths = async () => {
+//   const apolloClient = initializeApollo();
 
-  const { data } = await apolloClient.query({
-    query: GET_MOVIES,
-  });
+//   const { data } = await apolloClient.query({
+//     query: GET_MOVIES,
+//   });
 
-  const paths = data.movies.map((movie: Movie) => ({
-    params: { id: movie.id },
-  }));
+//   const paths = data.movies.map((movie: Movie) => ({
+//     params: { id: movie.id },
+//   }));
 
-  return {
-    paths,
-    fallback: false,
-  };
-};
+//   return {
+//     paths,
+//     fallback: false,
+//   };
+// };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const apolloClient = initializeApollo();
+// export const getStaticProps: GetStaticProps = async (context) => {
+//   const apolloClient = initializeApollo();
 
-  const { id } = context.params as ParsedUrlQuery;
+//   const { id } = context.params as ParsedUrlQuery;
 
-  await apolloClient.query({
-    query: GET_MOVIE,
-    variables: { id },
-  });
+//   await apolloClient.query({
+//     query: GET_MOVIE,
+//     variables: { id },
+//   });
 
-  return {
-    props: {
-      initialApolloState: apolloClient.cache.extract(),
-    },
-  };
-};
+//   return {
+//     props: {
+//       initialApolloState: apolloClient.cache.extract(),
+//     },
+//   };
+// };
 
 export default MovieDetails;
