@@ -1,4 +1,5 @@
 import { GetStaticProps, NextPage } from 'next';
+import Head from 'next/head';
 import { ParsedUrlQuery } from 'querystring';
 import { useRouter } from 'next/router';
 import { useQuery } from '@apollo/client';
@@ -13,16 +14,23 @@ const DirectorDetails: NextPage = () => {
   const { data } = useQuery(GET_DIRECTOR, {
     variables: { id: router.query.id },
   });
+  const { director } = data;
 
   const onMovieClick = (movie: Movie) => {
     router.push(`/movies/${movie.id}`);
   };
 
   return (
-    <DirectorDetailsLayout
-      director={data.director}
-      onMovieClick={onMovieClick}
-    />
+    <>
+      <Head>
+        <title>{director.name + 'details'}</title>
+        <meta
+          name="description"
+          content={'Here are ' + director.name + ' details'}
+        />
+      </Head>
+      <DirectorDetailsLayout director={director} onMovieClick={onMovieClick} />
+    </>
   );
 };
 

@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import Head from 'next/head';
 import { useEffect, useRef } from 'react';
 import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
@@ -46,6 +47,10 @@ const Movies: NextPage<MoviesPageProps> = () => {
 
   return (
     <div ref={listInnerRef}>
+      <Head>
+        <title>Top Movies</title>
+        <meta name="description" content="Here are the best movies" />
+      </Head>
       <PageLayout>
         {movies.map((movie) => {
           return (
@@ -68,8 +73,6 @@ export const getStaticProps = async () => {
     query: GET_MOVIES,
     variables: { offset: 0, limit: 15 },
   });
-
-  console.log('cache', apolloClient.cache.extract());
 
   return {
     props: {

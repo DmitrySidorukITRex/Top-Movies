@@ -1,4 +1,5 @@
 import { NextPage } from 'next';
+import Head from 'next/head';
 import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { initializeApollo } from '../../../apollo-client';
@@ -21,17 +22,23 @@ const Directors: NextPage<DirectorsProps> = () => {
   };
 
   return (
-    <PageLayout>
-      {directors.map((director) => {
-        return (
-          <DirectorCard
-            key={director.id}
-            director={director}
-            onCardClick={onDirectorClick}
-          />
-        );
-      })}
-    </PageLayout>
+    <>
+      <Head>
+        <title>Top Directors</title>
+        <meta name="description" content="Here are the best directors" />
+      </Head>
+      <PageLayout>
+        {directors.map((director) => {
+          return (
+            <DirectorCard
+              key={director.id}
+              director={director}
+              onCardClick={onDirectorClick}
+            />
+          );
+        })}
+      </PageLayout>
+    </>
   );
 };
 
