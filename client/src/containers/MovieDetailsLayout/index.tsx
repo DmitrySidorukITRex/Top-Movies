@@ -18,7 +18,7 @@ const MovieDetailsLayout: React.FC<MovieDetailsLayoutProps> = ({ movie }) => {
 
   return (
     <Styled.Layout>
-      <Styled.Title>{name}</Styled.Title>
+      <Styled.Title data-testid="title">{name}</Styled.Title>
       <Styled.Subtitle>
         {year}, IMDb Rating {rate}
       </Styled.Subtitle>

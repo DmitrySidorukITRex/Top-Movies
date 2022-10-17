@@ -31,7 +31,7 @@ const DirectorDetailsLayout: React.FC<DirectorDetailsLayoutProps> = ({
           alt="director image"
         />
         <Styled.Info>
-          <Styled.Title>{name}</Styled.Title>
+          <Styled.Title data-testid="title">{name}</Styled.Title>
           {info.map((item) => {
             return (
               <Styled.InfoItem key={item.value}>

@@ -22,27 +22,29 @@ const Movies: NextPage<MoviesPageProps> = () => {
   const movies: Movie[] = data.movies;
 
   useEffect(() => {
-    function watchScroll() {
+    const trackScrolling = () => {
+      const el = listInnerRef.current;
+
+      if (el) {
+        if (el.getBoundingClientRect().bottom <= window.innerHeight) {
+          fetchMore({ variables: { offset: movies.length } });
+        }
+      }
+    };
+
+    const watchScroll = () => {
       window.addEventListener('scroll', trackScrolling);
-    }
+    };
+
     watchScroll();
+
     return () => {
       window.removeEventListener('scroll', trackScrolling);
     };
-  });
+  }, [fetchMore, movies.length]);
 
   const onMovieClick = (movie: Movie) => {
     router.push(`movies/${movie.id}`);
-  };
-
-  const trackScrolling = () => {
-    const el = listInnerRef.current;
-
-    if (el) {
-      if (el.getBoundingClientRect().bottom <= window.innerHeight) {
-        fetchMore({ variables: { offset: movies.length } });
-      }
-    }
   };
 
   return (
