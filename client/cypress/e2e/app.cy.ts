@@ -32,3 +32,5 @@ describe('Navigation', () => {
     cy.get('[data-testid="title"]').should('contain.text', 'Guy Ritchie');
   });
 });
+
+export {};

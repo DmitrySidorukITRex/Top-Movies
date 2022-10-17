@@ -9,17 +9,13 @@ import PageLayout from '../../containers/PageLayout';
 import { Movie } from '../../interfaces/movie';
 import { GET_MOVIES } from '../../services/movies';
 
-interface MoviesPageProps {
-  movies: Movie[];
-}
-
-const Movies: NextPage<MoviesPageProps> = () => {
+const Movies: NextPage = () => {
   const { data, fetchMore } = useQuery(GET_MOVIES, {
     variables: { offset: 0, limit: 15 },
   });
   const router = useRouter();
   const listInnerRef = useRef<HTMLDivElement>(null);
-  const movies: Movie[] = data.movies;
+  const movies: Movie[] = data?.movies || [];
 
   useEffect(() => {
     const trackScrolling = () => {
